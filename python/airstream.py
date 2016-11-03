@@ -5,7 +5,7 @@ aire 1.0
 ---------
 cada hora recupera datos de la medición de contaminantes
 de las estaciones del sistema de monitoreo de calidad de aire de cdmx,
-almacena un registro temporal y le procesa para enviarle como 
+almacena un registro temporal y le procesa para enviarle como
 mensajes OSC a intervalos regulares
 """
 
@@ -16,8 +16,8 @@ from time import localtime, time, sleep, asctime
 # --vars
 send_period = 0.1
 get_period = 3600
-osc_host = "127.0.0.1" 
-osc_port = 8000
+osc_host = "127.0.0.1"
+osc_port = 57121
 
 
 def update_stations():
@@ -38,7 +38,7 @@ def update_stations():
 		soup = BS(html, "html.parser")
 		table = soup.find('table')
 		table_rows = table.find_all('tr')
-		
+
 		register =table_rows[-1].find_all('td')
 		new_reg = []
 		for r in register:
@@ -105,7 +105,7 @@ if __name__ == "__main__":
 		# -- stream data
 		mms = send_current(ip, ik, iy, cOsc)
 		ik += 1
-		if( ik >= len(nk[params[ip]]) ): 
+		if( ik >= len(nk[params[ip]]) ):
 			ik = 2
 			ip += 1
 			if (ip>=len(params)):
@@ -126,6 +126,6 @@ if __name__ == "__main__":
 			t0 = time()
 			print "\n[* *] :: updated at ::" + asctime()
 		else:
-			# --sleep	
+			# --sleep
 			sleep(send_period)
 	# end while
