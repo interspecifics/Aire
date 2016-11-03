@@ -17,7 +17,7 @@ from time import localtime, time, sleep, asctime
 send_period = 0.1
 get_period = 3600
 osc_host = "127.0.0.1"
-osc_port = 57121
+osc_port = 57120
 
 
 def update_stations():
