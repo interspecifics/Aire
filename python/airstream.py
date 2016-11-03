@@ -60,7 +60,8 @@ def send_current(ip, ik, iy, cOsc):
 	current_station = nk[current_param][ik]
 	current_val = data_ring[current_param][iy][ik]
 
-	route = "/"+current_station+"/"+data_ring[current_param][iy][0]+"/"+data_ring[current_param][iy][1]+"/"+current_param
+	#route = "/"+current_station+"/"+data_ring[current_param][iy][0]+"/"+data_ring[current_param][iy][1]+"/"+current_param
+	route = "/"+current_station+"/"+current_param
 	msg = OSC.OSCMessage()
 	msg.setAddress(route)
 	try:
