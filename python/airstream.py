@@ -61,7 +61,7 @@ def send_current(ip, ik, iy, cOsc):
 	current_val = data_ring[current_param][iy][ik]
 
 	#route = "/"+current_station+"/"+data_ring[current_param][iy][0]+"/"+data_ring[current_param][iy][1]+"/"+current_param
-	route = "/"+current_station+"/"+current_param
+	route = "/"+current_station
 	msg = OSC.OSCMessage()
 	msg.setAddress(route)
 	try:
@@ -103,7 +103,6 @@ if __name__ == "__main__":
 	# -- the loop
 	t0 = time()
 	while ( True ):
-		# -- stream data
 		mms = send_current(ip, ik, iy, cOsc)
 		ik += 1
 		if( ik >= len(nk[params[ip]]) ):
