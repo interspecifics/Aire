@@ -29,14 +29,16 @@ SynthDef(\miguelhidalgo,{
 )
 
 a = Synth.new(\miguelhidalgo);
-a.set(\amp,4);
+a.set(\amp,10);
 a.free;
 
 (
 b = OSCFunc( { | msg, time, addr, port |
-	var mghFreq;
-	mghFreq = msg[1].asFloat;
-	( "MGH value is " + mghFreq ).postln;
+	var mghFreq,mghFreq1;
+	mghFreq = msg[1].asFloat.linlin(0.1, 400.00, 40.00,100.00);
+	mghFreq1 = msg[1].asFloat;
+	( "MGHsynth " + mghFreq ).postln;
+	( "MGH value is " + mghFreq1 ).postln;
 	a.set(\mghfreq,mghFreq
 		 );
 }, '/MGH' );
