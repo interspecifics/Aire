@@ -6,11 +6,17 @@ Estos datos son capturados y reutilizados para crear un ensamble de sintetizador
 o reflejo sonoro del comportamiento ambiental de la ciudad.
 
 #Librerias:
+
 1 - sudo pip install request
+
 2 - sudo pip install BeautifulSoup
+
 3 - download : https://github.com/ptone/pyosc
+
 4 - sudo ./setup.py install
 
-#Activar 
+#Activar:
+
 1 - Correr primero el archivo airetodo.sc en supercollider
+
 2 - sudo python airstreamPromedios.py en la terminal 
