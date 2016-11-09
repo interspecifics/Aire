@@ -15,21 +15,22 @@ s.boot; ///bootear servidos
 
 (
 SynthDef(\pm2,{
-	arg mghfreq=40, nharm=10, detune=0.5,amp=0.4,out=0;
-	var sig, env;
+	arg mghfreq=40, nharm=10, detune=0.5,amp=2,out=0;
+	var sig, env, limiter;
 	env = EnvGen.kr(Env.adsr(0.5,0.5,0.5,1),doneAction:2);
 	sig = Blip.ar(
 		mghfreq *
 		LFNoise1.kr(0.2!8).bipolar(detune.neg,detune).midiratio,nharm);
 	sig = sig * LFNoise1.kr(0.4!8).exprange(0.1,1);
 	sig = (sig * env * amp);
-	Out.ar(out,sig);
+	limiter = Limiter.ar(sig,3,0.1);
+	Out.ar(out,limiter);
 
 }).add;
 )
 
 a = Synth.new(\pm2);
-a.set(\amp,3);
+a.set(\amp,1);
 a.free;
 
 (
@@ -50,9 +51,8 @@ b.free;
 
 (
 SynthDef(\nitrogenoxide,{
-	arg freq1=200,freq2=300, gate=1, dur=100, amp=0.5,out=0, pospan=2.0, width=2.0;
+	arg freq1=200,freq2=300, gate=1, dur=100, amp=0.3,out=0, pospan=2.0, width=2.0;
 	var env,sig, panaz;
-	env = EnvGen.kr(Env.perc(1/20,dur), gate);
 	sig =  SinOsc.ar(BrownNoise.ar(freq1, freq2));
 	sig = sig * amp * env;
 	panaz= PanAz.ar(8,sig,pospan,0.3,width,0.5);
@@ -62,7 +62,7 @@ SynthDef(\nitrogenoxide,{
 
 
 c=Synth(\nitrogenoxide, [\Freq1,rrand(100,200),\freq2,rrand(200,300)]);
-c.set(\amp,1);
+c.set(\amp,0.5);
 c.set(\width, 0);
 c.free;
 
@@ -90,7 +90,7 @@ SynthDef(\panaz2, {
 	panaz = PanAz.ar(
         8,
         BrownNoise.ar,
-        LFSaw.kr(LFNoise1.kr(noise)),0.1,width,0.5);
+        LFSaw.kr(LFNoise1.kr(noise)),0.05,width,0.5);
 	Out.ar(0,panaz);
 }).add
 )
@@ -102,7 +102,7 @@ e.free;
 (
 f= OSCFunc( { | msg, time, addr, port |
 	var noise;
-	noise = msg[1].asFloat;
+	noise = msg[1].asFloat.linlin(0.1,100,0.1,5);
 	( "so2 value is " + noise ).postln;
 	e.set(\noise,noise
 				);
@@ -116,7 +116,7 @@ f.free
 (
 SynthDef.new(\pulses, {
 	arg ampHz=1, fund=0.009, maxPartial=1000, width=0.5;
-	var amp1, amp2, freq1, freq2, sig1, sig2,mixer;
+	var amp1, amp2, freq1, freq2, sig1, sig2,mixer, limiter;
 	amp1 = Pulse.kr(ampHz, 0, 0.12) * 0.5;
 	amp2 = Pulse.kr (ampHz, 0.5, 0.12) * 0.5;
 	freq1 = LFNoise1.kr(1).exprange(fund, fund*maxPartial).round(fund);
@@ -128,7 +128,8 @@ SynthDef.new(\pulses, {
 	sig1 = FreeVerb.ar(sig1, 0.7, 0.8, 0.25);
 	sig2 = FreeVerb.ar(sig2, 0.7, 0.8, 0.25);
 	mixer = Mix.new([sig1,sig2!8]);
-	Out.ar (0, mixer);
+	limiter = Limiter.ar(mixer,2,0.05);
+	Out.ar (0, limiter);
 }).add;
 )
 g = Synth.new(\pulses);
