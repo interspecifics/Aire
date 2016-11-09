@@ -8,13 +8,7 @@ de las estaciones del sistema de monitoreo de calidad de aire de cdmx,
 almacena un registro temporal y le procesa para enviarle como
 mensajes OSC a intervalos regulares
 
-TO-D0
-
-1-hacer un valor unico que contenga la suma de los niveles de todas las estaciones
-por contaminantes
-
-2- Enviar de forma continua el valor que resulte y solo cambiarlo cuando se actualice
-(si el tiempo de actualizar es por hora hacer un loop con ese valor unico)
+Los mensajes son enviados por estación por contaminante.
 """
 
 import requests, cPickle, OSC

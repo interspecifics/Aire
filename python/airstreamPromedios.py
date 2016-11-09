@@ -8,7 +8,7 @@ de las estaciones del sistema de monitoreo de calidad de aire de cdmx,
 almacena un registro temporal y le procesa para enviarle como
 mensajes OSC a intervalos regulares
 
-1.1 usa los promedios por contaminante
+1.1 Envia los promedios por contaminante
 """
 
 import requests, cPickle, OSC
@@ -19,8 +19,13 @@ from time import localtime, time, sleep, asctime
 send_period = 0.1
 get_period = 3600
 osc_host = "127.0.0.1"
+<<<<<<< HEAD
 osc_port = 57120
 nsteps = 24
+=======
+osc_port = 57121
+nsteps = 1
+>>>>>>> origin/master
 
 
 def update_stations():
