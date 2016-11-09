@@ -5,6 +5,9 @@ mientras recibe datos provenientes de los servidores del sistema de monitoreo at
 Estos datos son capturados y reutilizados para crear un ensamble de sintetizadores virtuales que emiten una imagen 
 o reflejo sonoro del comportamiento ambiental de la ciudad.
 
+![the system](https://github.com/interspecifics/Aire/blob/master/soft.png?raw=true)
+
+
 #Librerias:
 
 1 - sudo pip install request
