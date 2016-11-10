@@ -19,13 +19,10 @@ from time import localtime, time, sleep, asctime
 send_period = 0.1
 get_period = 3600
 osc_host = "127.0.0.1"
-<<<<<<< HEAD
 osc_port = 57120
 nsteps = 24
-=======
 osc_port = 57121
 nsteps = 1
->>>>>>> origin/master
 
 
 def update_stations():
