@@ -1,26 +1,26 @@
-#N canvas 409 67 819 263 10;
+#N canvas 393 238 819 263 10;
 #X declare -lib mrpeach;
 #X obj -58 -138 vsl 30 40 0 1023 0 0 empty empty empty 0 -9 0 10 -4032
--1 -1 61 1;
+-1 -1 2 1;
 #X floatatom -58 -89 5 0 0 0 - - -;
 #X obj 0 -138 vsl 30 40 0 1023 0 0 empty empty empty 0 -9 0 10 -4032
--1 -1 259 1;
+-1 -1 776 1;
 #X obj 59 -138 vsl 30 40 1 1023 0 0 empty empty empty 0 -9 0 10 -4032
--1 -1 259 1;
+-1 -1 11 1;
 #X floatatom 59 -89 5 0 0 0 - - -;
 #X obj 114 -138 vsl 30 40 1 1023 0 0 empty empty empty 0 -9 0 10 -4032
--1 -1 305 1;
+-1 -1 0 1;
 #X floatatom 114 -89 5 0 0 0 - - -;
 #X floatatom 0 -89 5 0 0 0 - - -;
 #X obj 170 -138 vsl 30 40 1 1023 0 0 empty empty empty 0 -9 0 10 -4032
--1 -1 53 1;
+-1 -1 81 1;
 #X floatatom 170 -89 5 0 0 0 - - -;
 #X obj -58 -73 s datos1;
 #X obj 0 -73 s datos2;
 #X obj 114 -73 s datos4;
 #X obj 170 -73 s datos5;
 #X obj 364 9 hradio 20 1 0 6 empty empty empty 0 -8 0 10 -262144 -1
--1 5;
+-1 0;
 #X text 364 -8 127;
 #X text 387 -8 63;
 #X text 406 -8 31;
@@ -56,7 +56,7 @@
 1;
 #X obj 453 47 tgl 12 0 empty empty empty 8 -8 0 10 -262144 -1 -1 0
 1;
-#X obj 472 47 tgl 12 0 empty empty empty 8 -8 0 10 -262144 -1 -1 1
+#X obj 472 47 tgl 12 0 empty empty empty 8 -8 0 10 -262144 -1 -1 0
 1;
 #N canvas 240 140 837 349 shifterAll 0;
 #X obj -13 -28 inlet;
@@ -68,7 +68,7 @@
 ;
 #X obj 77 32 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0 1
 ;
-#X obj 100 32 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+#X obj 100 32 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
 1;
 #X msg -23 55 127;
 #X obj -288 242 /;
@@ -172,25 +172,25 @@
 #X connect 36 0 34 0;
 #X restore 497 29 pd shifterAll;
 #X obj 641 -132 vsl 15 30 0 600 0 0 empty empty empty 0 -9 0 10 -33289
--262144 -1 2900 1;
+-262144 -1 2100 1;
 #X obj 607 -132 vsl 15 30 0 600 0 0 empty empty empty 0 -9 0 10 -33289
--262144 -1 2900 1;
+-262144 -1 1100 1;
 #X obj 59 -73 s datos3;
 #X obj 573 -132 vsl 15 30 0 600 0 0 empty empty empty 0 -9 0 10 -33289
--262144 -1 2900 1;
+-262144 -1 1600 1;
 #X obj 539 -132 vsl 15 30 0 600 0 0 empty empty empty 0 -9 0 10 -33289
--262144 -1 2900 1;
+-262144 -1 2300 1;
 #X obj 593 28 s speed;
 #X floatatom 593 7 5 0 0 0 - - -;
 #X obj 230 -138 vsl 30 40 1 1023 0 0 empty empty empty 0 -9 0 10 -4032
--1 -1 61 1;
+-1 -1 83 1;
 #X floatatom 230 -88 5 0 0 0 - - -;
 #X obj 292 -138 vsl 30 40 1 1023 0 0 empty empty empty 0 -9 0 10 -4032
--1 -1 69 1;
+-1 -1 74 1;
 #X floatatom 292 -86 5 0 0 0 - - -;
 #X obj 645 11 vsl 15 30 0 600 0 0 empty empty empty 0 -9 0 10 -33289
--262144 -1 900 1;
-#N canvas 355 104 855 358 osc 0;
+-262144 -1 1000 1;
+#N canvas 261 398 855 358 osc 0;
 #X obj 123 44 unpackOSC;
 #X obj 95 -34 print unpacked;
 #X obj 95 -12 import mrpeach;
@@ -203,8 +203,6 @@
 #X obj 207 166 s o5;
 #X obj 240 166 s o6;
 #X obj 274 166 s o7;
-#X obj 95 85 routeOSC /LLA /NEZ /CHO /MPA /TLA /XAL /SAG /PED /MGH
-/MER /HGM /CUT /CUA /PED /LVI /LLA /MON /COY /CHO /BJU /ATI;
 #X obj 307 167 s o8;
 #X obj 340 167 s o9;
 #X obj 374 167 s o10;
@@ -212,63 +210,63 @@
 #X obj 455 167 s o12;
 #X obj 495 167 s o13;
 #X obj 534 167 s o14;
-#X connect 0 0 12 0;
+#X obj 95 84 routeOSC /no /nox /so2 /tmp /no2 /pm10 /o3 /pm2 /rh /co
+/wdr /wsp;
+#X connect 0 0 19 0;
 #X connect 4 0 0 0;
-#X connect 12 0 5 0;
-#X connect 12 1 6 0;
-#X connect 12 2 7 0;
-#X connect 12 3 8 0;
-#X connect 12 4 9 0;
-#X connect 12 5 10 0;
-#X connect 12 6 11 0;
-#X connect 12 7 13 0;
-#X connect 12 8 14 0;
-#X connect 12 9 15 0;
-#X connect 12 10 16 0;
-#X connect 12 11 17 0;
-#X connect 12 12 18 0;
-#X connect 12 13 19 0;
+#X connect 19 0 5 0;
+#X connect 19 1 6 0;
+#X connect 19 2 7 0;
+#X connect 19 3 8 0;
+#X connect 19 4 9 0;
+#X connect 19 5 10 0;
+#X connect 19 6 11 0;
+#X connect 19 7 12 0;
+#X connect 19 8 13 0;
+#X connect 19 9 14 0;
+#X connect 19 10 15 0;
+#X connect 19 11 16 0;
 #X restore 539 9 pd osc;
 #X obj 170 -164 r o5;
 #X obj 230 -164 r o6;
 #X obj 293 -164 r o7;
 #X obj -57 -20 vsl 30 40 0 1023 0 0 empty empty empty 0 -9 0 10 -4032
--1 -1 61 1;
+-1 -1 68 1;
 #X floatatom -57 29 5 0 0 0 - - -;
 #X obj 1 -20 vsl 30 40 0 1023 0 0 empty empty empty 0 -9 0 10 -4032
--1 -1 57 1;
+-1 -1 278 1;
 #X obj 60 -20 vsl 30 40 1 1023 0 0 empty empty empty 0 -9 0 10 -4032
--1 -1 57 1;
+-1 -1 0 1;
 #X floatatom 60 29 5 0 0 0 - - -;
 #X obj 115 -20 vsl 30 40 1 100 0 0 empty empty empty 0 -9 0 10 -4032
--1 -1 79 1;
+-1 -1 670 1;
 #X floatatom 115 29 5 0 0 0 - - -;
 #X floatatom 1 29 5 0 0 0 - - -;
 #X obj 171 -20 vsl 30 40 1 1024 0 0 empty empty empty 0 -9 0 10 -4032
--1 -1 8 1;
+-1 -1 65 1;
 #X floatatom 171 29 5 0 0 0 - - -;
 #X obj 231 -20 vsl 30 40 1 1023 0 0 empty empty empty 0 -9 0 10 -4032
--1 -1 8 1;
+-1 -1 65 1;
 #X floatatom 231 30 5 0 0 0 - - -;
 #X obj 293 -20 vsl 30 40 1 1023 0 0 empty empty empty 0 -9 0 10 -4032
--1 -1 57 1;
+-1 -1 0 1;
 #X floatatom 293 32 5 0 0 0 - - -;
 #X obj 230 -72 s datos6;
 #X obj 292 -70 s datos7;
 #X obj 370 -133 hradio 10 1 0 6 empty empty empty 0 -8 0 10 -262144
--1 -1 2;
+-1 -1 3;
 #N canvas 837 289 450 300 s1 0;
-#X obj 81 -18 tgl 10 0 empty empty empty 8 -8 0 10 -262144 -1 -1 0
+#X obj 81 -18 tgl 10 0 empty empty empty 8 -8 0 10 -262144 -1 -1 1
 1;
 #X obj 92 -18 tgl 10 0 empty empty empty 8 -8 0 10 -262144 -1 -1 0
 1;
-#X obj 103 -18 tgl 10 0 empty empty empty 8 -8 0 10 -262144 -1 -1 0
+#X obj 103 -18 tgl 10 0 empty empty empty 8 -8 0 10 -262144 -1 -1 1
 1;
-#X obj 114 -18 tgl 10 0 empty empty empty 8 -8 0 10 -262144 -1 -1 0
+#X obj 114 -18 tgl 10 0 empty empty empty 8 -8 0 10 -262144 -1 -1 1
 1;
 #X obj 124 -18 tgl 10 0 empty empty empty 8 -8 0 10 -262144 -1 -1 0
 1;
-#X obj 134 -18 tgl 10 0 empty empty empty 8 -8 0 10 -262144 -1 -1 1
+#X obj 134 -18 tgl 10 0 empty empty empty 8 -8 0 10 -262144 -1 -1 0
 1;
 #N canvas 70 200 450 300 on/off1 0;
 #X obj 40 76 route 0 1 2 3 4 5;
@@ -295,11 +293,11 @@
 1;
 #X obj -260 40 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
 1;
-#X obj -236 40 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+#X obj -236 40 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
 1;
 #X obj -214 40 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
 1;
-#X obj -191 40 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+#X obj -191 40 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
 1;
 #X msg -314 63 127;
 #X obj -239 150 /;
@@ -310,7 +308,7 @@
 #X msg -170 61 7.5;
 #X msg -135 62 3.5;
 #X obj -303 5 route 0 1 2 3 4 5;
-#X obj -302 40 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+#X obj -302 40 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
 1;
 #X obj -239 198 s datosP1;
 #X obj -294 198 r datos1;
@@ -349,11 +347,11 @@
 #X connect 9 0 7 0;
 #X restore 370 -118 pd s1;
 #X obj 371 -84 hradio 10 1 0 6 empty empty empty 0 -8 0 10 -262144
--1 -1 2;
+-1 -1 1;
 #N canvas 837 289 450 300 s2 0;
 #X obj 81 -18 tgl 10 0 empty empty empty 8 -8 0 10 -262144 -1 -1 0
 1;
-#X obj 92 -18 tgl 10 0 empty empty empty 8 -8 0 10 -262144 -1 -1 0
+#X obj 92 -18 tgl 10 0 empty empty empty 8 -8 0 10 -262144 -1 -1 1
 1;
 #X obj 103 -18 tgl 10 0 empty empty empty 8 -8 0 10 -262144 -1 -1 0
 1;
@@ -361,7 +359,7 @@
 1;
 #X obj 124 -18 tgl 10 0 empty empty empty 8 -8 0 10 -262144 -1 -1 0
 1;
-#X obj 134 -18 tgl 10 0 empty empty empty 8 -8 0 10 -262144 -1 -1 1
+#X obj 134 -18 tgl 10 0 empty empty empty 8 -8 0 10 -262144 -1 -1 0
 1;
 #X obj 77 -78 inlet;
 #X obj 149 -75 inlet;
@@ -386,7 +384,7 @@
 #X restore 81 -43 pd on/off2;
 #N canvas 25 187 1021 549 shifter2 0;
 #X obj -304 -20 inlet;
-#X obj -282 40 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+#X obj -282 40 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
 1;
 #X obj -260 40 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
 1;
@@ -442,7 +440,7 @@
 #X connect 8 5 5 0;
 #X restore 371 -69 pd s2;
 #X obj 451 -133 hradio 10 1 0 6 empty empty empty 0 -8 0 10 -262144
--1 -1 1;
+-1 -1 5;
 #N canvas 837 289 450 300 s3 0;
 #X obj 81 -18 tgl 10 0 empty empty empty 8 -8 0 10 -262144 -1 -1 0
 1;
@@ -481,11 +479,11 @@
 #X obj -304 -20 inlet;
 #X obj -282 40 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
 1;
-#X obj -260 40 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+#X obj -260 40 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
 1;
-#X obj -236 40 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+#X obj -236 40 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
 1;
-#X obj -214 40 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+#X obj -214 40 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
 1;
 #X obj -191 40 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
 1;
@@ -535,19 +533,19 @@
 #X connect 8 5 5 0;
 #X restore 451 -118 pd s3;
 #X obj 452 -84 hradio 10 1 0 6 empty empty empty 0 -8 0 10 -262144
--1 -1 1;
+-1 -1 2;
 #N canvas 837 289 450 300 s4 0;
 #X obj 81 -18 tgl 10 0 empty empty empty 8 -8 0 10 -262144 -1 -1 0
 1;
 #X obj 92 -18 tgl 10 0 empty empty empty 8 -8 0 10 -262144 -1 -1 0
 1;
-#X obj 103 -18 tgl 10 0 empty empty empty 8 -8 0 10 -262144 -1 -1 0
+#X obj 103 -18 tgl 10 0 empty empty empty 8 -8 0 10 -262144 -1 -1 1
 1;
 #X obj 114 -18 tgl 10 0 empty empty empty 8 -8 0 10 -262144 -1 -1 0
 1;
 #X obj 124 -18 tgl 10 0 empty empty empty 8 -8 0 10 -262144 -1 -1 0
 1;
-#X obj 134 -18 tgl 10 0 empty empty empty 8 -8 0 10 -262144 -1 -1 1
+#X obj 134 -18 tgl 10 0 empty empty empty 8 -8 0 10 -262144 -1 -1 0
 1;
 #X obj 77 -78 inlet;
 #X obj 149 -75 inlet;
@@ -572,9 +570,9 @@
 #X restore 81 -43 pd on/off4;
 #N canvas 25 187 1021 549 shifter4 0;
 #X obj -304 -20 inlet;
-#X obj -282 40 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+#X obj -282 40 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
 1;
-#X obj -260 40 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+#X obj -260 40 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
 1;
 #X obj -236 40 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
 1;
