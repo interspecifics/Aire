@@ -7,6 +7,17 @@
  ·sensor radar RAD 						(WL-V)
 ~estaciones del SHOA
  ·http://www.shoa.cl/nuestros-servicios/mareas?id=811
+
+
+ Para ejecutar el script en la terminal:
+
+ sudo python radar_02.py 1 180 10
+
+ el primer valor es el tiempo entre mensajes en segundos:
+ el segundo valor es el tiempo en el que se actualiza del servidor
+ el tercero es el tamaño del loop.
+
+ esos valores los pueden ajustar segun el tipo de lectura que quieran.
 """
 
 import requests, cPickle, OSC, sys
