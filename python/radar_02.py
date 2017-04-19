@@ -33,7 +33,9 @@ osc_host = "127.0.0.15"
 osc_port = 57120
 #shoa service
 stations = ['ARI','PIS','IQQ','PAT','TOC',
-			'MEJ','ANT','PAP','TAL','CHN']
+			'MEJ','ANT','PAP','TAL','CHN'
+            'CAL','HUA','QOC','SFX','JFZ',
+            'PIC','QUI','VLP','SNO','BUC']
 url_base = 'http://www.cona.cl/mareas/grafico.php?estacion='
 
 # -- meths
