@@ -28,8 +28,8 @@ from time import localtime, time, sleep, asctime
 send_period = 1  #s
 get_period = 600  #s
 n_steps = 100;
-#osc_host = "127.0.0.15"
-osc_host = "locahost"
+osc_host = "127.0.0.15"
+#osc_host = "locahost"
 osc_port = 57120
 #shoa service
 stations = ['ARI','PIS','IQQ','PAT','TOC',
