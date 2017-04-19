@@ -26,11 +26,12 @@ send_period = 1  #s
 get_period = 300  #s
 n_steps = 2;
 #osc_host = "127.0.0.15"
-osc_host = "192.168.0.168"
+osc_host = "192.168.5.227"
 osc_port = 8000
 #shoa service
 stations = ['ARI','PIS','IQQ','PAT','TOC',
-			'MEJ','ANT','PAP','TAL','CHN']
+			'MEJ','ANT','PAP','TAL','CHN'
+            'PAS']
 url_base = 'http://www.cona.cl/mareas/grafico_ta_tw.php?estacion='
 
 
