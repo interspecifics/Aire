@@ -26,7 +26,7 @@ send_period = 1  #s
 get_period = 300  #s
 n_steps = 2;
 #osc_host = "127.0.0.15"
-osc_host = "192.168.8.103"
+osc_host = "192.168.1.40"
 osc_port = 57120
 #shoa service
 stations = ['ARI','PIS','IQQ','PAT','TOC',
