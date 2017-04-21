@@ -1,47 +1,40 @@
 # -*- coding: utf-8 -*-
 
 """
-*//tides
-recupera datos
- ·temperatura del agua TW
- ·temperatura del aire TA
- ·presión atmosférica BP
- ·humedad relativa RH
-cada period de tiempo
- ·get_period
-de las estaciones del SHOA
- ·http://www.shoa.cl/nuestros-servicios/mareas?id=812
-parsea la info
-almacena en regsitro temporal
-genera mensajes osc a intervalos send_period
+*//radar
+~same as tides but for
+ ·sensor de presión hidrostática PRS 	(WL-K)
+ ·sensor radar RAD 						(WL-V)
+~estaciones del SHOA
+ ·http://www.shoa.cl/nuestros-servicios/mareas?id=811
 
+
+ Para ejecutar el script en la terminal:
+
+ sudo python radar_02.py 1 180 10
+
+ el primer valor es el tiempo entre mensajes en segundos:
+ el segundo valor es el tiempo en el que se actualiza del servidor
+ el tercero es el tamaño del loop.
+
+ esos valores los pueden ajustar segun el tipo de lectura que quieran.
 """
 
-import requests, cPickle, OSC
+import requests, cPickle, OSC, sys
 from bs4 import BeautifulSoup as BS
 from time import localtime, time, sleep, asctime
 
 # --vars
 send_period = 1  #s
-get_period = 300  #s
-n_steps = 2;
-#osc_host = "127.0.0.15"
-<<<<<<< HEAD
-osc_host = "192.168.1.40"
-=======
-osc_host = "192.168.5.227"
-osc_port = 8000
-=======
-osc_host = "192.168.8.103"
->>>>>>> origin/master
+get_period = 600  #s
+n_steps = 100;
+osc_host = "127.0.0.15"
+#osc_host = "locahost"
 osc_port = 57120
->>>>>>> origin/master
 #shoa service
 stations = ['ARI','PIS','IQQ','PAT','TOC',
-			'MEJ','ANT','PAP','TAL','CHN'
-            'PAS']
-url_base = 'http://www.cona.cl/mareas/grafico_ta_tw.php?estacion='
-
+			'MEJ','ANT','PAP','TAL','CHN']
+url_base = 'http://www.cona.cl/mareas/grafico.php?estacion='
 
 # -- meths
 def update_stations():
@@ -72,7 +65,7 @@ def update_stations():
 					data_dict[typ] = [[timestamp],[data]]
 				completed+=1
 			else:
-				print 'Unparsearble:' + str(sc)
+				print 'Unparseable:' + str(sc)
 		station_dict[st] = data_dict
 		print '\t\t['+st+']: ' + str(completed)
 	print '\t\t\t\tOK :: ' +  asctime()
@@ -100,6 +93,14 @@ def send_actual(i_st, i_po, cOsc):
 
 
 if __name__ == "__main__":
+	# -- parse args
+	# --vars
+	if (len(sys.argv)>=3):
+		send_period = int(sys.argv[1] )
+		get_period = int(sys.argv[2])
+		n_steps = int(sys.argv[3])
+		print "[+.+]: SEND_period=%ds, GET_period=%ds, STEPS_n=%d" % (send_period, get_period, n_steps)
+
 	# -- inits
 	i_po = -1;
 	i_st = 0
@@ -109,10 +110,10 @@ if __name__ == "__main__":
 	# -- fetch or load data
 	try:
 		data_block = update_stations()
-		cPickle.dump(data_block, open('tides.data',"w"))
+		cPickle.dump(data_block, open('radar.data',"w"))
 		print "[·-·]: new data"
 	except:
-		data_block = cPickle.load(open('tides.data', 'r'))
+		data_block = cPickle.load(open('radar.data', 'r'))
 		print "[._.]: old data"
 
 	# -- the loop
@@ -123,13 +124,15 @@ if __name__ == "__main__":
 		print mms
 
 		i_st = i_st+1 if i_st < len(stations)-1 else 0
-		if i_st == 0: i_po = i_po-1 if i_po > -n_steps else -1
+		if (i_st == 0):
+			i_po = i_po-1 if i_po > -n_steps else -1
+			print "[T]: %d minutos" % i_po
 
 		# --update
 		if ( abs(time()-t0) > get_period ):
 			try:
 				data_block = update_stations()
-				cPickle.dump(data_block, open('tides.data',"w"))
+				cPickle.dump(data_block, open('radar.data',"w"))
 				print "[·-·]: new data"
 			except:
 				print "[=-=]: same data"
