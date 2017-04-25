@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+    # -*- coding: utf-8 -*-
 
 """
 *//radar
@@ -29,6 +29,7 @@ send_period = 1  #s
 get_period = 600  #s
 n_steps = 100;
 osc_host = "192.168.5.227"
+osc_host = "192.168.1.40"
 #osc_host = "locahost"
 osc_port = 8666
 #shoa service

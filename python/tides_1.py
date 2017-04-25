@@ -26,10 +26,14 @@ send_period = 1  #s
 get_period = 300  #s
 n_steps = 2;
 #osc_host = "127.0.0.15"
+<<<<<<< HEAD
+osc_host = "192.168.1.40"
+=======
 osc_host = "192.168.5.227"
 osc_port = 8000
 =======
 osc_host = "192.168.8.103"
+>>>>>>> origin/master
 osc_port = 57120
 >>>>>>> origin/master
 #shoa service
