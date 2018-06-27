@@ -5,7 +5,7 @@ interspecifics // aire 2.0
 ---------------------------
 cada hora recupera datos de la medición de contaminantes
 de las estaciones del sistema de monitoreo de calidad de aire de cdmx,
-almacena un registro temporal y le procesa para enviarle como 
+almacena un registro temporal y le procesa para enviarle como
 mensajes OSC a intervalos regulares
 adds dataring and timelapse functions, updates .cpk,
 and streams timelapse data
@@ -22,15 +22,15 @@ from time import localtime, time, sleep, asctime
 send_period = 0.1
 send_period_2 = 0.05
 get_period = 3600
-#osc_host = "127.0.0.15" 
-osc_host = "192.168.1.73" 
-osc_port = 8000
+#osc_host = "127.0.0.15"
+osc_host = "192.168.15.6"
+osc_port = 57120
 
 def lerp(a, b, d):
 	return a * (1 - d) + b * d
 
 def update_stations_24():
-	""" create queries, fetch data, parse & return data and keys"""	
+	""" create queries, fetch data, parse & return data and keys"""
 	contams = ['so2', 'co', 'nox', 'no2', 'no', 'o3', 'pm10', 'pm2', 'wsp', 'wdr', 'tmp', 'rh']
 	new_data = {}
 	new_keys = {}
@@ -38,8 +38,13 @@ def update_stations_24():
 	qmes = str(localtime().tm_mon)
 	qtipo = 'HORARIOS'
 
-	print "[interspecifics.aire]"
-	print "[stations] >> ",
+	print "[--------------------------------------------]"
+	print "[••••••••••••••••••••••••••••••••••••••••••••]"
+	print "[I N T E R S P E C I F I C S .AIRE. 2018]"
+    print "[@ Espacio de Experimentacion Sonora del MUAC]"
+	print "[loading stations]"
+	print "[data available] >> "
+	print "[reading values:]",
 
 	for p in contams:
 		#--- make request, get table
@@ -115,7 +120,7 @@ def send_current(ip, iy, cOsc):
 	if nv != 0:
 		current_mean = current_mean/float(nv)
 	else:
-		current_mean = 0	
+		current_mean = 0
 
 	route = "/"+current_param
 	msg = OSC.OSCMessage()
@@ -137,7 +142,7 @@ def send_current_2(ii, ty, jj, cOsc):
 	if nv != 0:
 		current_mean = current_mean/float(nv)
 	else:
-		current_mean = 0	
+		current_mean = 0
 
 	#--- calculate for past
 	past_mean = 0.0;
@@ -149,7 +154,7 @@ def send_current_2(ii, ty, jj, cOsc):
 	if nv != 0:
 		past_mean = past_mean/float(nv)
 	else:
-		past_mean = 0	
+		past_mean = 0
 
 	#--- interpolate with ty
 	actual_val = lerp(past_mean, current_mean, ty)
@@ -205,7 +210,7 @@ if __name__ == "__main__":
 		mms = send_current(ip, iy, cOsc)
 		#--- counter engine
 		if ip==0:
-			#for i in range(100): print "\b", 
+			#for i in range(100): print "\b",
 			ty = str(data_ring[contams[ip]][iy][0])+"-"+str(data_ring[contams[ip]][iy][1])
 			print "\n["+ty+"]",
 		ip += 1
@@ -222,7 +227,7 @@ if __name__ == "__main__":
 			print "\n\n[aire_data] :: start current data stream :: [...---***]"
 			#- loop on current
 			for ii in range(in_ncy):
-				#--- string with percentage 
+				#--- string with percentage
 				ty = ii/float(in_ncy)
 				print "\n["+str(ii+1)+"/"+str(in_ncy)+"]",
 				#--- send contaminants
@@ -250,7 +255,7 @@ if __name__ == "__main__":
 			#--- restart timer
 			t0 = time()
 			print "\n[aire_data] ::" + asctime()
-		#--- sleep	
+		#--- sleep
 		else:
 			sleep(send_period_2)
 	# end whilep
