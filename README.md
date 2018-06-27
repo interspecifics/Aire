@@ -33,3 +33,7 @@ Sintesis digital escritos en supercollider
 1 - Correr primero el archivo airetodo.sc en supercollider
 
 2 - sudo python airstreamPromedios.py en la terminal 
+
+![the system](https://raw.githubusercontent.com/interspecifics/Aire/master/run.png?raw=true)
+
+
