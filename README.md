@@ -1,9 +1,19 @@
-# Aire
-Aire es una obra generativa compuesta para el sistema de ocho canales del Espacio Sonoro de Casa del Lago. 
-Al ser generativa, la obra no tiene una estructura fija o una duración específica sino que se va transformando 
-mientras recibe datos provenientes de los servidores del sistema de monitoreo atmosférico de la Ciudad de México. 
-Estos datos son capturados y reutilizados para crear un ensamble de sintetizadores virtuales que emiten una imagen 
-o reflejo sonoro del comportamiento ambiental de la ciudad.
+![header](https://github.com/interspecifics/Aire/blob/master/soft.png?raw=true)
+
+#AIRE 15.0 (2018)
+#Interspecifics
+#Museo Universitario Arte Contemporáneo
+
+Aire es una pieza sonora generativa inspirada en la complejidad y variación de la contaminación atmosférica en una de las ciudades más contaminadas del mundo, la Ciudad de México. Partimos de un trabajo de investigación que se encarga de entender la forma en la que opera el sistema de monitoreo ambiental de la CDMX y utiliza un software escrito en Python para acceder a los valores que arrojan los sensores ambientales ubicados en las estaciones de Ecobici. Los datos recibidos: dióxido de azufre, monóxido de carbono, óxido de nitrógeno, dióxido de nitrógeno, monóxido de nitrógeno, ozono y partículas por millar, son distribuidos por zonas y analizados en un escala de niveles de saturación para con su flujo dar carácter y animar un ensamble de sintetizadores virtuales programados en Supercollider.  En la pieza, cada uno de los contaminantes tiene una identidad sonora propia y la fluctuación de la información modula todas sus características. Los patrones más relevantes y particulares que arroja el sistema detonan y apagan eventos de sonido conforme suceden y crean la estructura de la composición sobre la marcha. Además, el valor de velocidad y dirección del viento sirve como eje para controlar la lógica de espacialización de los instrumentos en un sistema de 15 canales organizado bajo una lógica cartesiana. Esta pieza forma parte de una serie de investigaciones sobre la performatividad de distintos fenómenos físicos y la capacidad del sonido para crear experiencias multimodales de los mismos.
+
+
+Desarrollo 
+
+Software para captura de datos escrito es Python 
+
+Lógica de composición escrita en supercollider 
+
+Sintesis digital escritos en supercollider 
 
 ![the system](https://github.com/interspecifics/Aire/blob/master/soft.png?raw=true)
 
