@@ -41,7 +41,7 @@ def update_stations_24():
 	print "[--------------------------------------------]"
 	print "[••••••••••••••••••••••••••••••••••••••••••••]"
 	print "[I N T E R S P E C I F I C S .AIRE. 2018]"
-    print "[@ Espacio de Experimentacion Sonora del MUAC]"
+	print "[@ Espacio de Experimentacion Sonora del MUAC]"
 	print "[loading stations]"
 	print "[data available] >> "
 	print "[reading values:]",
