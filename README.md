@@ -23,11 +23,21 @@ Sintesis digital escritos en supercollider
 
 1 - sudo pip install request
 
-2 - sudo pip install BeautifulSoup
+2 - sudo pip install bs4
 
-3 - download : https://github.com/ptone/pyosc
+3 - sudo pip install pygame
 
-4 - sudo ./setup.py install
+4 - sudo pip install oscpy
+
+
+# mini(2020.05):
+
+1 - Actualizar rutas de archivos de datos   (21,22)
+
+2 - Actualizar host osc                     (24,25)
+
+3 - Ejecutar con aire_mini.py en la terminal
+
 
 #Activar:
 
