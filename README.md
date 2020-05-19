@@ -10,7 +10,7 @@ Aire es una pieza sonora generativa inspirada en la complejidad y variación de 
 
 Desarrollo 
 
-Software para captura de datos escrito es Python 
+Software para captura de datos escrito es Python 3.7
 
 Lógica de composición escrita en supercollider 
 
@@ -30,20 +30,20 @@ Sintesis digital escritos en supercollider
 4 - sudo pip install oscpy
 
 
-# mini(2020.05):
+# stat(2020.05):
 
-1 - Actualizar rutas de archivos de datos   (21,22)
+1 - Actualizar rutas de archivos de datos y font
 
-2 - Actualizar host osc                     (24,25)
+2 - Actualizar OSC host y port
 
-3 - Ejecutar con aire_mini.py en la terminal
+3 - Ejecutar con aire_stat.py en la terminal
 
 
 #Activar:
 
 1 - Correr primero el archivo airetodo.sc en supercollider
 
-2 - sudo python aire_mini.py en la terminal 
+2 - sudo python aire_stat.py en la terminal 
 
 ![the system](https://raw.githubusercontent.com/interspecifics/Aire/master/run.png?raw=true)
 
