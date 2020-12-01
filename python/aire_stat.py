@@ -24,12 +24,12 @@ from oscpy.client import OSCClient
 
 
 pygame.init()
-DATA_PATH = 'D:/SK/py/aire/data2020/contaminantes_2020.JSON'
-FONT_PATH = 'D:/SK/py/aire/RevMiniPixel.ttf'
+DATA_PATH = "contaminantes_2020.JSON"
+FONT_PATH = "RevMiniPixel.ttf"
 N_CONTAMS = 9
 N_ESTACIONES = 28
 
-OSC_HOST = "192.168.1.141"
+OSC_HOST = "127.0.0.1"
 OSC_PORT = 8000
 OSC_CLIENT = []
 
@@ -243,7 +243,7 @@ def update_data_send(i=0):
             #print (estado_estaciones[e])
             if isFloat(estado_estaciones[e]):
                 aux_sam = float(estado_estaciones[e])
-            else: 
+            else:
                 aux_sam = 0
             actual_set[j] = aux_sam
         except:
@@ -252,7 +252,7 @@ def update_data_send(i=0):
 
         # send
         if sws[j]:
-            ruta = '/aire/{}'.format(s.lower())    
+            ruta = '/aire/{}'.format(s.lower())
             ruta = ruta.encode()
             if (modes[j]):
                 OSC_CLIENT.send_message(ruta, [aux_sam])
@@ -269,14 +269,14 @@ def update_data_send(i=0):
 def load_data():
     global contaminantes,fechas
     # para acceder a los datos del archivo:
-    contaminantes = json.load(open(DATA_PATH,'r+')) 
+    contaminantes = json.load(open(DATA_PATH,'r+'))
     _dates = contaminantes['pollutionMeasurements']['date'].keys()
     fechas = list(_dates)
     print ("[DATA]: ok")
     return
 
 def isFloat(s):
-    try: 
+    try:
         float(s)
         return True
     except ValueError:
@@ -381,7 +381,7 @@ def update_text():
     WINDOW.blit(AUX_LABEL, (100, 30))
     AUX_LABEL = FONT.render(' [ AIRE ]', 1, GREEN)
     WINDOW.blit(AUX_LABEL, (390, 30))
-    for j in range(N_CONTAMS): 
+    for j in range(N_CONTAMS):
         if sws[j]:     LAB = FONT.render(CONTAMS[j], 1, (0, 255, 0))
         else:        LAB = FONT.render(CONTAMS[j], 1, (32, 24, 0))
         #WINDOW.blit(LABELS[j], (104+j*75, 354))
@@ -421,16 +421,6 @@ def main():
     pygame.time.set_timer(TIC_EVENT, TIC_TIMER)
     game_loop()
     print("FIN DE LA TRANSMISSION //...")
-    
+
 if __name__=="__main__":
     main()
-
-
-
-
-
-
-
-
-
-

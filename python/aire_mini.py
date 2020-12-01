@@ -18,10 +18,10 @@ from oscpy.client import OSCClient
 # init
 pygame.init()
 
-DATA_PATH = 'D:/SK/py/aire/contaminantes_2020.JSON'
-FONT_PATH = 'D:/SK/py/aire/RevMiniPixel.ttf'
+DATA_PATH = "contaminantes_2020.JSON"
+FONT_PATH = "RevMiniPixel.ttf"
 
-OSC_HOST = "192.168.1.141"
+OSC_HOST = "127.0.0.1"
 OSC_PORT = 8000
 OSC_CLIENT = []
 
@@ -89,7 +89,7 @@ def update_data_send(i=0):
 			# send()
 			aux_mean = statistics.mean(lista_mediciones)
 			actual_set[j] = aux_mean
-			ruta = '/aire/{}'.format(s.lower())	
+			ruta = '/aire/{}'.format(s.lower())
 			ruta = ruta.encode()
 			if sws[j]:
 				OSC_CLIENT.send_message(ruta, [aux_mean])
@@ -102,14 +102,14 @@ def update_data_send(i=0):
 def load_data():
 	global contaminantes,fechas
 	# para acceder a los datos del archivo:
-	contaminantes = json.load(open(DATA_PATH,'r+')) 
+	contaminantes = json.load(open(DATA_PATH,'r+'))
 	_dates = contaminantes['pollutionMeasurements']['date'].keys()
 	fechas = list(_dates)
 	print ("[DATA]: ok")
 	return
 
 def isFloat(s):
-	try: 
+	try:
 		float(s)
 		return True
 	except ValueError:
@@ -205,16 +205,6 @@ def main():
 	pygame.time.set_timer(TIC_EVENT, TIC_TIMER)
 	game_loop()
 	print("FIN DE LA TRANSMISSION //...")
-	
+
 if __name__=="__main__":
 	main()
-
-
-
-
-
-
-
-
-
-
