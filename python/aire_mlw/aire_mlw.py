@@ -38,7 +38,7 @@ N_ESTACIONES_CITIES = 70
 N_CHANNELS = 9
 FONT_PATH = './RevMiniPixel.ttf'
 
-OSC_HOST = "192.168.1.216"
+OSC_HOST = "127.0.0.1"
 OSC_PORT = 8000
 OSC_CLIENT = []
 tempo = 1000
@@ -161,7 +161,7 @@ class Plot():
 
         return
 
-    def update(self, new_samples, nam, frz = False, cst=False): 
+    def update(self, new_samples, nam, frz = False, cst=False):
         # queue new sample and dequeue other data
         self.a_o = new_samples[0]
         self.a_n = new_samples[1]
@@ -218,7 +218,7 @@ class Plot():
         pygame.draw.line(surf, G2, (dx+wi+178, dy),(dx+wi+178, dy+he-1), 1)
         pygame.draw.line(surf, G2, (dx+wi+182, dy),(dx+wi+182, dy+he-1), 1)
         pygame.draw.line(surf, CO_3, (actual_point_p[0]+180, actual_point_p[1]),(actual_point_p[0]+184, actual_point_p[1]), 2)
-        # calculate a color        
+        # calculate a color
         le_color_mean = pygame.Color(int(pmap(last_sample_o, min_o, max_o, 0, 255)),
                                     int(pmap(last_sample_n, min_n, max_n, 255,0)),
                                     int(pmap(last_sample_p, min_p, max_p, 255,120)))
@@ -249,22 +249,22 @@ class Plot():
             surf.blit(n_estacion, (dx+wi+275, dy+25)) # <- pos of <ESTACION>
         # freeze panel
         pygame.draw.rect(surf, G2, pygame.Rect(dx+wi+178, dy ,25, he), 1)#+30freeze
-        if (self.freeze): 
+        if (self.freeze):
             pygame.draw.rect(surf, ORANGE, pygame.Rect(dx+wi+185, dy+2 ,15, he/2-2), 1)#+30freeze
         else:
             pygame.draw.rect(surf, G2, pygame.Rect(dx+wi+185, dy+2 ,15, he/2-2), 1)#+30freeze
         # cast
-        if (self.cast==True): 
+        if (self.cast==True):
             pygame.draw.rect(surf, CYAN, pygame.Rect(dx+wi+185, dy+2+he/2 ,15, he/2-4), 1)#+30freeze
         else:
             pygame.draw.rect(surf, G2, pygame.Rect(dx+wi+185, dy+2+he/2 ,15, he/2-4), 1)#+30freeze
         # ML panel
         pygame.draw.rect(surf, G2, pygame.Rect(dx+wi+203, dy ,70, he), 1)#+30freeze+70ml
         center_ml = [dx+wi+203+35, dy+he/2-5]
-        r = he/2 
+        r = he/2
         n_axis = 3
-        rvs = [pmap(last_sample_o, min_o, max_o, 0, r), 
-                pmap(last_sample_n, min_n, max_n, 0, r), 
+        rvs = [pmap(last_sample_o, min_o, max_o, 0, r),
+                pmap(last_sample_n, min_n, max_n, 0, r),
                 pmap(last_sample_p, min_p, max_p, 0, r)]
         points = []
         axises = []
@@ -318,7 +318,7 @@ CHANNELS_CITIES = ['1A','1B','1C','1D','1E','1F','1G','1H','1I']
 # /BTN/ channel switch
 BTNS_SWS = [pygame.draw.rect(DRAW_SCREEN, CYAN, pygame.Rect(50, 75+c*90, 60, 70), 1) for c in range(N_CHANNELS)]
 CTNS_SWS = [pygame.draw.rect(CITIES_SCREEN, CYAN, pygame.Rect(50, 75+c*90, 60, 70), 1) for c in range(N_CHANNELS)]
-# /BTN/ channel modes 
+# /BTN/ channel modes
 BTNS_M1 = [pygame.draw.rect(DRAW_SCREEN, RED, pygame.Rect(298, 75+c*90, 62, 70), 1) for c in range(N_CHANNELS)]
 BTNS_M2 = [pygame.draw.rect(DRAW_SCREEN, RED, pygame.Rect(298+62, 75+c*90, 62, 70), 1) for c in range(N_CHANNELS)]
 BTNS_M3 = [pygame.draw.rect(DRAW_SCREEN, RED, pygame.Rect(298+124, 75+c*90, 62, 70), 1) for c in range(N_CHANNELS)]
@@ -354,11 +354,11 @@ clock = pygame.time.Clock()
 # switches, a_stats, modes
 big_mode = 1
 sw_dt = True
-sws = [False for c in range(N_CHANNELS)]        
+sws = [False for c in range(N_CHANNELS)]
 a_stats = [c  for c in range(N_CHANNELS)]       # actual stations for each channel
 modes = [int(c/3)+1 for c in range(N_CHANNELS)] # mode 0 is off, 1 is o, 2 is n, 3 is p
 sw_dt_cts = True
-sws_cts = [False for c in range(N_CHANNELS)]        
+sws_cts = [False for c in range(N_CHANNELS)]
 a_stats_cts = [c  for c in range(N_CHANNELS)]       # actual stations for each channel
 modes_cts = [int(c/3)+1 for c in range(N_CHANNELS)] # mode 0 is off, 1 is o, 2 is n, 3 is p
 
@@ -427,20 +427,20 @@ def update_data_send(i=0):
                 actual_set[j] = a_v
                 past_labels[j] = actual_labels[j]
                 actual_labels[j] = a_label
-                ruta = '/aire/{}'.format(ch.upper())    
+                ruta = '/aire/{}'.format(ch.upper())
                 ruta = ruta.encode()
                 OSC_CLIENT.send_message(ruta, [a_v])
                 print("[_{}]: \t{:0.3f}\t({})\t[{}]".format(ch, a_v, e, a_label))
                 # state tracking for labels osc a_label
                 if (actual_labels[j] != past_labels[j]):
-                    ruta = '/aire/{}/F{}'.format(ch.upper(), past_labels[j])    
+                    ruta = '/aire/{}/F{}'.format(ch.upper(), past_labels[j])
                     ruta = ruta.encode()
                     OSC_CLIENT.send_message(ruta, [0])
-                    ruta = '/aire/{}/F{}'.format(ch.upper(), actual_labels[j])    
+                    ruta = '/aire/{}/F{}'.format(ch.upper(), actual_labels[j])
                     ruta = ruta.encode()
                     OSC_CLIENT.send_message(ruta, [1])
             else:
-                ruta = '/aire/{}'.format(ch.upper())    
+                ruta = '/aire/{}'.format(ch.upper())
                 ruta = ruta.encode()
                 OSC_CLIENT.send_message(ruta, [past_set[j]])
                 print("[_{}]: \t{:0.3f}\t({})\t[{}]".format(ch, past_set[j], e, a_label))
@@ -488,20 +488,20 @@ def update_data_send_cities(i=0):
                 actual_set_cts[j] = a_v
                 past_labels_cts[j] = actual_labels_cts[j]
                 actual_labels_cts[j] = a_label_cts
-                ruta = '/aire/{}'.format(ch.upper())    
+                ruta = '/aire/{}'.format(ch.upper())
                 ruta = ruta.encode()
                 OSC_CLIENT.send_message(ruta, [a_v])
                 print("[_{}]: \t{:0.3f}\t({})\t[{}]".format(ch, a_v, keys_cts[e], a_label_cts))
                 # state tracking for labels osc a_label
                 if (actual_labels_cts[j] != past_labels_cts[j]):
-                    ruta = '/aire/{}/F{}'.format(ch.upper(), past_labels_cts[j])    
+                    ruta = '/aire/{}/F{}'.format(ch.upper(), past_labels_cts[j])
                     ruta = ruta.encode()
                     OSC_CLIENT.send_message(ruta, [0])
                     ruta = '/aire/{}/F{}'.format(ch.upper(), actual_labels_cts[j])
                     ruta = ruta.encode()
                     OSC_CLIENT.send_message(ruta, [1])
             else:
-                ruta = '/aire/{}'.format(ch.upper())    
+                ruta = '/aire/{}'.format(ch.upper())
                 ruta = ruta.encode()
                 OSC_CLIENT.send_message(ruta, [past_set_cts[j]])
                 print("[_{}]: \t{:0.3f}\t({})\t[{}]".format(ch, past_set_cts[j], keys_cts[e], a_label_cts))
@@ -575,7 +575,7 @@ def update_data_csv(fn='EXTRACT_20201127.06.csv'):
 def dump_data():
     global db, ee, ff
     pack = db,ee,ff
-    json.dump(pack, open(DATA_PATH,'r+')) 
+    json.dump(pack, open(DATA_PATH,'r+'))
     print ("[DATA]: dumped: ", DATA_PATH)
     return
 
@@ -633,7 +633,7 @@ def train_models_cts():
 def load_data():
     global db,ee,ff
     # para acceder a los datos del archivo:
-    pack = json.load(open(DATA_PATH,'r+')) 
+    pack = json.load(open(DATA_PATH,'r+'))
     db,ee,ff = pack
     print ("[DATA]: loaded")
     return
@@ -646,7 +646,7 @@ def load_models():
 def load_data_cts():
     global db_cts, ee_cts, ff_cts
     # para acceder a los datos del archivo:
-    pack = json.load(open(DATA_PATH_CITIES,'r+')) 
+    pack = json.load(open(DATA_PATH_CITIES,'r+'))
     db_cts, ee_cts, ff_cts = pack
     print ("[DATA_CTS]: loaded")
     return
@@ -658,7 +658,7 @@ def load_models_cts():
 
 
 def isFloat(s):
-    try: 
+    try:
         float(s)
         return True
     except ValueError:
@@ -718,7 +718,7 @@ def handle_mouse_clicks():
     pos = pygame.mouse.get_pos()
     pressed1, pressed2, pressed3 = pygame.mouse.get_pressed()
     # first have to detect big_mode changes
-    # 
+    #
     # check everything if mode is 0: LOCAL
     if (big_mode==0):
         # clic on buttons (switches)
@@ -887,7 +887,7 @@ def update_graphics_cts():
         else:
             CO_1 = G2
             CO_2 = G2
-            CO_3 = G2          
+            CO_3 = G2
         # do plots           < .... POS HERE
         o_y = 60+c*90
         PLOTS_CTS[c].draw(PLOT_SCREEN, 110, o_y)
@@ -913,17 +913,17 @@ def update_text():
     AUX_LABEL = FONT.render(' [ AiRE ]', 1, GREEN)
     WINDOW.blit(AUX_LABEL, (50, 30))
     # /LABELS/ channels lab=name sta=value
-    for j in range(N_CHANNELS): 
+    for j in range(N_CHANNELS):
         if (modes[j]>0):     LAB = FONT.render("[_"+CHANNELS[j]+"]", 1, GREEN)
         else:        LAB = FONT.render("[_"+CHANNELS[j]+"]", 1, G2)
         if (modes[j]>0):     STA = FONTmini.render("{:0.2f}".format(actual_set[j]), 1, GREEN)
         else:        STA = FONTmini.render("{:0.2f}".format(actual_set[j]), 1, G2)
         CO_L = coloros[actual_labels[j]]
         aaa_lab = ''.join(["* " if actual_labels[j]==i  else '  ' for i in range(5)])
-        if (modes[j]>0):     
+        if (modes[j]>0):
             BK = FONTmini.render("[           ]", 1, GREEN)
             MDL = FONTmini.render("  {} ".format(aaa_lab), 1, CO_L)
-        else:        
+        else:
             BK = FONTmini.render("[           ]", 1, G2)
             MDL = FONTmini.render("  {} ".format(aaa_lab), 1, G2)
         WINDOW.blit(LAB, (60, 85 + j*90))
@@ -961,17 +961,17 @@ def update_text_cts():
     AUX_LABEL = FONT.render(' [ AiRE ]', 1, GREEN)
     WINDOW.blit(AUX_LABEL, (50, 30))
     # /LABELS/ channels lab=name sta=value
-    for j in range(N_CHANNELS): 
+    for j in range(N_CHANNELS):
         if (modes_cts[j]>0):     LAB = FONT.render("[_"+CHANNELS_CITIES[j]+"]", 1, GREEN)
         else:        LAB = FONT.render("[_"+CHANNELS_CITIES[j]+"]", 1, G2)
         if (modes_cts[j]>0):     STA = FONTmini.render("{:0.2f}".format(actual_set_cts[j]), 1, GREEN)
         else:        STA = FONTmini.render("{:0.2f}".format(actual_set_cts[j]), 1, G2)
         CO_L = coloros[actual_labels_cts[j]]
         aaa_lab = ''.join(["* " if actual_labels_cts[j]==i  else '  ' for i in range(5)])
-        if (modes_cts[j]>0):     
+        if (modes_cts[j]>0):
             BK = FONTmini.render("[           ]", 1, GREEN)
             MDL = FONTmini.render("  {} ".format(aaa_lab), 1, CO_L)
-        else:        
+        else:
             BK = FONTmini.render("[           ]", 1, G2)
             MDL = FONTmini.render("  {} ".format(aaa_lab), 1, G2)
         WINDOW.blit(LAB, (60, 85 + j*90))
@@ -1029,7 +1029,7 @@ def main():
     pygame.time.set_timer(TIC_EVENT, TIC_TIMER)
     game_loop()
     print("FIN DE LA TRANSMISSION //...")
-    
+
 if __name__=="__main__":
     main()
 
