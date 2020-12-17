@@ -970,7 +970,7 @@ def update_text_cts():
         aaa_lab = ''.join(["* " if actual_labels_cts[j]==i  else '  ' for i in range(5)])
         if (modes_cts[j]>0):
             BK = FONTmini.render("[           ]", 1, GREEN)
-            MDL = FONTmini.render("  {} ".format(aaa_lab), 1, CO_L)
+            MDL = FONTmini.render("  {} ".format(aaa_lab), 1, CYAN)
         else:
             BK = FONTmini.render("[           ]", 1, G2)
             MDL = FONTmini.render("  {} ".format(aaa_lab), 1, G2)
