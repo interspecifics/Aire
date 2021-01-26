@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-AIRE v:ML+w, 2020.12
+AIRE v:ML+w, 2020.12 [aire_mlw.py]
 {--}-------------{--}
 > Now with ML!
 > And wordlwide cities
@@ -15,7 +15,7 @@ pip install scikit-learn
 http://www.aire.cdmx.gob.mx/privado/WRI-Interspecific/
 
 
->> 2021.C
+>> 2021.C [aire_w+.py]
 ---------
 support for new api
 new stations list
@@ -23,9 +23,22 @@ new stations list
 -------------
 double osc
 lighter
-
 -> tunear timerrs
 -> osc: cont_index
+
+
+>> 2021.01.23
+requires buster w/python3.7
+sudo apt-get install libblas-dev liblapack-dev libatlas-base-dev gfortran
+get last versions for scipy and scikit-learn from pywheels.org/simple/scipy
+install with python3.7 -m pip install scipy0.19.0[...].whl
+
+
+>> 2021.01.26 [aire_V3.py]
+rpi 800x480
+fullscreen
+
+
 
 """
 
@@ -38,6 +51,7 @@ import pickle
 import numpy as np
 from sklearn.cluster import KMeans
 from oscpy.client import OSCClient
+from time import sleep
 
 pygame.init()
 
@@ -51,7 +65,7 @@ N_ESTACIONES_CITIES = 49
 N_CHANNELS = 9
 FONT_PATH = './RevMiniPixel.ttf'
 
-OSC_HOST1 = "127.0.0.1"
+OSC_HOST1 = "192.168.100.38"
 OSC_PORT1 = 8000
 OSC_HOST2 = "192.168.1.216"
 OSC_PORT2 = 8888
@@ -60,8 +74,8 @@ OSC_PORT2 = 8888
 OSC_CLIENT1 = []
 tempo = 1000
 
-W = 710
-H = 900
+W = 480
+H = 800
 
 CO_1 = (255, 0, 0)
 CO_2 = (0, 255, 0)
@@ -153,7 +167,8 @@ class Plot():
         self.samples_o = [0.0 for a in range(self.n)]
         self.samples_n = [0.0 for a in range(self.n)]
         self.samples_p = [0.0 for a in range(self.n)]
-        self.font = pygame.font.Font(FONT_PATH, 14)
+        self.font = pygame.font.Font(FONT_PATH, 16)
+        self.font2 = pygame.font.Font(FONT_PATH, 12)
         self.freeze = False
         self.cast = False
 
@@ -177,14 +192,14 @@ class Plot():
 
     def draw(self, surf, dx, dy):
         # draw the list or create a polygon
-        wi = 96*2
+        wi = 96
         he = 70
         max_o, max_n, max_p = max(self.samples_o), max(self.samples_n), max(self.samples_p)
         min_o, min_n, min_p = min(self.samples_o), min(self.samples_n), min(self.samples_p)
         # scale the points
-        points_o = [[dx+i*2, dy+pmap(s, min_o, max_o, he, 0)] for i,s in enumerate(self.samples_o)]
-        points_n = [[dx+i*2, dy+pmap(s, min_n, max_n, he, 0)] for i,s in enumerate(self.samples_n)]
-        points_p = [[dx+i*2, dy+pmap(s, min_p, max_p, he, 0)] for i,s in enumerate(self.samples_p)]
+        points_o = [[dx+i, dy+pmap(s, min_o, max_o, he, 0)] for i,s in enumerate(self.samples_o)]
+        points_n = [[dx+i, dy+pmap(s, min_n, max_n, he, 0)] for i,s in enumerate(self.samples_n)]
+        points_p = [[dx+i, dy+pmap(s, min_p, max_p, he, 0)] for i,s in enumerate(self.samples_p)]
         last_sample_o = self.samples_o[-1]
         last_sample_n = self.samples_n[-1]
         last_sample_p = self.samples_p[-1]
@@ -192,9 +207,9 @@ class Plot():
         actual_point_n = points_n[-1]
         actual_point_p = points_p[-1]
         # set on position
-        points_o = [[dx,dy]] + points_o + [[dx+(len(self.samples_o)-1)*2, dy]]
-        points_n = [[dx,dy]] + points_n + [[dx+(len(self.samples_n)-1)*2, dy]]
-        points_p = [[dx,dy]] + points_p + [[dx+(len(self.samples_p)-1)*2, dy]]
+        points_o = [[dx,dy]] + points_o + [[dx+(len(self.samples_o)-1), dy]]
+        points_n = [[dx,dy]] + points_n + [[dx+(len(self.samples_n)-1), dy]]
+        points_p = [[dx,dy]] + points_p + [[dx+(len(self.samples_p)-1), dy]]
         # draw the polygons
         pygame.draw.polygon(surf, CO_1, points_o, 1)
         pygame.draw.polygon(surf, CO_2, points_n, 1)
@@ -221,9 +236,9 @@ class Plot():
                                     int(pmap(last_sample_n, min_n, max_n, 255,0)),
                                     int(pmap(last_sample_p, min_p, max_p, 255,120)))
         # the labels n values
-        l_o = self.font.render('  O3', 1, CO_1)
-        l_n = self.font.render(' NO2', 1, CO_2)
-        l_p = self.font.render('PM25', 1, CO_3)
+        l_o = self.font2.render('  O3', 1, CO_1)
+        l_n = self.font2.render(' NO2', 1, CO_2)
+        l_p = self.font2.render('PM25', 1, CO_3)
         if (not self.cast):
             v_o = self.font.render('{:0.2f}'.format(last_sample_o), 1, CO_1)
             v_n = self.font.render('{:0.2f}'.format(last_sample_n), 1, CO_2)
@@ -232,19 +247,21 @@ class Plot():
             v_o = self.font.render('{:0.2f}'.format(last_sample_o/100), 1, CO_1)
             v_n = self.font.render('{:0.2f}'.format(last_sample_n/100), 1, CO_2)
             v_p = self.font.render('{:0.2f}'.format(last_sample_p/100), 1, CO_3)
-        surf.blit(l_o, (315, dy+25))
-        surf.blit(l_n, (375, dy+25))
-        surf.blit(l_p, (435, dy+25))
-        surf.blit(v_o, (315, dy+45))
-        surf.blit(v_n, (375, dy+45))
-        surf.blit(v_p, (435, dy+45))
+        surf.blit(l_o, (350-170, dy+35))
+        surf.blit(l_n, (405-170, dy+35))
+        surf.blit(l_p, (460-170, dy+35))
+        surf.blit(v_o, (330-170, dy+50))
+        surf.blit(v_n, (390-170, dy+50))
+        surf.blit(v_p, (450-170, dy+50))
+
         # draw another frame
-        pygame.draw.rect(surf, G2, pygame.Rect(dx+wi+273, dy ,70, he), 1)#+30freeze+70ml
-        n_estacion = self.font.render('# {} #'.format(self.esta), 1, CYAN)
+        pygame.draw.rect(surf, G2, pygame.Rect(dx+wi+273, dy ,60, he), 1)#+30freeze+70ml
+        n_estacion = self.font.render(':{}'.format(self.esta), 1, GREEN)
         if (big_mode==0):
-            surf.blit(n_estacion, (dx+wi+280, dy+25)) # <- pos of <ESTACION>
+            surf.blit(n_estacion, (dx+wi+297, dy+32)) # <- pos of <ESTACION>
         elif (big_mode==1):
-            surf.blit(n_estacion, (dx+wi+275, dy+25)) # <- pos of <ESTACION>
+            surf.blit(n_estacion, (dx+wi+288, dy+32)) # <- pos of <ESTACION>
+
         # freeze panel
         pygame.draw.rect(surf, G2, pygame.Rect(dx+wi+178, dy ,25, he), 1)#+30freeze
         if (self.freeze):
@@ -302,6 +319,7 @@ BACKGROUND_COLOR = (0,0,63)
 # load stuff, like fonts
 FONT = pygame.font.Font(FONT_PATH, 16)
 FONTmini = pygame.font.Font(FONT_PATH, 14)
+FONTmini2 = pygame.font.Font(FONT_PATH, 12)
 
 # main screen for drawing buttons
 DRAW_SCREEN = pygame.Surface((W,H))
@@ -314,33 +332,33 @@ CHANNELS = ['0A','0B','0C','0D','0E','0F','0G','0H','0I']
 CHANNELS_CITIES = ['1A','1B','1C','1D','1E','1F','1G','1H','1I']
 
 # /BTN/ channel switch
-BTNS_SWS = [pygame.draw.rect(DRAW_SCREEN, CYAN, pygame.Rect(50, 75+c*90, 60, 70), 1) for c in range(N_CHANNELS)]
-CTNS_SWS = [pygame.draw.rect(CITIES_SCREEN, CYAN, pygame.Rect(50, 75+c*90, 60, 70), 1) for c in range(N_CHANNELS)]
+BTNS_SWS = [pygame.draw.rect(DRAW_SCREEN, CYAN, pygame.Rect(1, 30+c*80, 49, 70), 1) for c in range(N_CHANNELS)]
+CTNS_SWS = [pygame.draw.rect(CITIES_SCREEN, CYAN, pygame.Rect(1, 30+c*80, 49, 70), 1) for c in range(N_CHANNELS)]
 # /BTN/ channel modes
-BTNS_M1 = [pygame.draw.rect(DRAW_SCREEN, RED, pygame.Rect(298, 75+c*90, 62, 70), 1) for c in range(N_CHANNELS)]
-BTNS_M2 = [pygame.draw.rect(DRAW_SCREEN, RED, pygame.Rect(298+62, 75+c*90, 62, 70), 1) for c in range(N_CHANNELS)]
-BTNS_M3 = [pygame.draw.rect(DRAW_SCREEN, RED, pygame.Rect(298+124, 75+c*90, 62, 70), 1) for c in range(N_CHANNELS)]
-CTNS_M1 = [pygame.draw.rect(CITIES_SCREEN, RED, pygame.Rect(298, 75+c*90, 62, 70), 1) for c in range(N_CHANNELS)]
-CTNS_M2 = [pygame.draw.rect(CITIES_SCREEN, RED, pygame.Rect(298+62, 75+c*90, 62, 70), 1) for c in range(N_CHANNELS)]
-CTNS_M3 = [pygame.draw.rect(CITIES_SCREEN, RED, pygame.Rect(298+124, 75+c*90, 62, 70), 1) for c in range(N_CHANNELS)]
+BTNS_M1 = [pygame.draw.rect(DRAW_SCREEN, RED, pygame.Rect(142, 30+c*80, 62, 70), 1) for c in range(N_CHANNELS)]
+BTNS_M2 = [pygame.draw.rect(DRAW_SCREEN, RED, pygame.Rect(142+62, 30+c*80, 62, 70), 1) for c in range(N_CHANNELS)]
+BTNS_M3 = [pygame.draw.rect(DRAW_SCREEN, RED, pygame.Rect(142+124, 30+c*80, 62, 70), 1) for c in range(N_CHANNELS)]
+CTNS_M1 = [pygame.draw.rect(CITIES_SCREEN, RED, pygame.Rect(142, 30+c*80, 62, 70), 1) for c in range(N_CHANNELS)]
+CTNS_M2 = [pygame.draw.rect(CITIES_SCREEN, RED, pygame.Rect(142+62, 30+c*80, 62, 70), 1) for c in range(N_CHANNELS)]
+CTNS_M3 = [pygame.draw.rect(CITIES_SCREEN, RED, pygame.Rect(142+124, 30+c*80, 62, 70), 1) for c in range(N_CHANNELS)]
 # /BTN/ station selector left
-BTNS_STATS_L = [pygame.draw.rect(DRAW_SCREEN, BLUE, pygame.Rect(573, 75+c*90, 35, 70), 1) for c in range(N_CHANNELS)]
-CTNS_STATS_L = [pygame.draw.rect(CITIES_SCREEN, BLUE, pygame.Rect(573, 75+c*90, 35, 70), 1) for c in range(N_CHANNELS)]
+BTNS_STATS_L = [pygame.draw.rect(DRAW_SCREEN, BLUE, pygame.Rect(573-156, 30+c*80, 35, 70), 1) for c in range(N_CHANNELS)]
+CTNS_STATS_L = [pygame.draw.rect(CITIES_SCREEN, BLUE, pygame.Rect(573-156, 30+c*80, 35, 70), 1) for c in range(N_CHANNELS)]
 # /BTN/ station selector right
-BTNS_STATS_R = [pygame.draw.rect(DRAW_SCREEN, (0,0,200), pygame.Rect(610, 75+c*90, 35, 70), 1) for c in range(N_CHANNELS)]
-CTNS_STATS_R = [pygame.draw.rect(CITIES_SCREEN, (0,0,200), pygame.Rect(610, 75+c*90, 35, 70), 1) for c in range(N_CHANNELS)]
+BTNS_STATS_R = [pygame.draw.rect(DRAW_SCREEN, (0,0,200), pygame.Rect(608-156, 30+c*80, 35, 70), 1) for c in range(N_CHANNELS)]
+CTNS_STATS_R = [pygame.draw.rect(CITIES_SCREEN, (0,0,200), pygame.Rect(608-156, 30+c*80, 35, 70), 1) for c in range(N_CHANNELS)]
 # /BTN/ station freeze
-BTNS_FREEZE = [pygame.draw.rect(DRAW_SCREEN, (0,200,200), pygame.Rect(483, 75+c*90, 22, 35), 1) for c in range(N_CHANNELS)]
-CTNS_FREEZE = [pygame.draw.rect(CITIES_SCREEN, (0,200,200), pygame.Rect(483, 75+c*90, 22, 35), 1) for c in range(N_CHANNELS)]
+BTNS_FREEZE = [pygame.draw.rect(DRAW_SCREEN, (0,200,200), pygame.Rect(483-156, 30+c*80, 22, 35), 1) for c in range(N_CHANNELS)]
+CTNS_FREEZE = [pygame.draw.rect(CITIES_SCREEN, (0,200,200), pygame.Rect(483-156, 30+c*80, 22, 35), 1) for c in range(N_CHANNELS)]
 # /BTN/ station freeze
-BTNS_CAST = [pygame.draw.rect(DRAW_SCREEN, (200,200,0), pygame.Rect(483, 110+c*90, 22, 35), 1) for c in range(N_CHANNELS)]
-CTNS_CAST = [pygame.draw.rect(CITIES_SCREEN, (200,200,0), pygame.Rect(483, 110+c*90, 22, 35), 1) for c in range(N_CHANNELS)]
+BTNS_CAST = [pygame.draw.rect(DRAW_SCREEN, (200,200,0), pygame.Rect(483-156, 65+c*80, 22, 35), 1) for c in range(N_CHANNELS)]
+CTNS_CAST = [pygame.draw.rect(CITIES_SCREEN, (200,200,0), pygame.Rect(483-156, 65+c*80, 22, 35), 1) for c in range(N_CHANNELS)]
 # /BTN/ channel date and time
-BTN_DT = pygame.draw.rect(DRAW_SCREEN, RED, pygame.Rect(390, 25, 100, 20), 1)
-CTN_DT = pygame.draw.rect(CITIES_SCREEN, RED, pygame.Rect(390, 25, 100, 20), 1)
+BTN_DT = pygame.draw.rect(DRAW_SCREEN, RED, pygame.Rect(200, 5, 100, 20), 1)
+CTN_DT = pygame.draw.rect(CITIES_SCREEN, RED, pygame.Rect(200, 5, 100, 20), 1)
 # /BTN/ BIG MODE
-BTN_BM = pygame.draw.rect(DRAW_SCREEN, CYAN, pygame.Rect(W-30, 50, 30, 400), 1)
-CTN_BM = pygame.draw.rect(CITIES_SCREEN, CYAN, pygame.Rect(W-30, 450, 30, 400), 1)
+BTN_BM = pygame.draw.rect(DRAW_SCREEN, CYAN, pygame.Rect(1, H-55, (W/2)-1, 30), 1)
+CTN_BM = pygame.draw.rect(CITIES_SCREEN, CYAN, pygame.Rect(W/2, H-55, (W/2)-1, 30), 1)
 
 # timer events
 TIC_EVENT = pygame.USEREVENT + 1
@@ -614,6 +632,7 @@ def dump_data():
 
 # -----------------------  -----------------------
 coloros = ['#1159FF', '#00FF38', '#FFEA12', '#FF7AA0', '#FF2812']
+coloros = [(17,89,255),(0,255,56),(255,234,18),(255,122,160),(255,40,18)]
 
 onTrain = False
 
@@ -716,8 +735,13 @@ def tic():
 def handle_keys(event):
     """ handlear teclas ;D"""
     global running, stats
-    """if (event.key == pygame.K_DOWN):
+    if (event.key == pygame.K_q):
         running = False
+    if (event.key==pygame.K_f):
+        pygame.display.toggle_fullscreen()
+        print("[FSXN]")
+    sleep(0.02)
+    """
     if (event.key == pygame.K_LEFT):
         if(stats[0]>0): stats[0]=stats[0]-1
     if (event.key == pygame.K_RIGHT):
@@ -856,6 +880,7 @@ def handle_mouse_clicks():
         if (BTN_BM.collidepoint(pos) and pressed1):
             big_mode = 0
             print("[BIG_MODE]: {}".format(big_mode))
+    sleep(0.05)
     return
 
 
@@ -883,14 +908,17 @@ def update_graphics():
             CO_1 = G2
             CO_2 = G2
             CO_3 = G2
-        # do plots           < .... POS HERE
-        o_y = 60+c*90
-        PLOTS[c].draw(PLOT_SCREEN, 110, o_y)
+        # do plots         < .... POS HERE
+        o_y = 30+c*80
+        PLOTS[c].draw(PLOT_SCREEN, 50, o_y)
         # redo btns  <<<<<<      BTN HERE
-        if(modes[c]>0): pygame.draw.rect(PLOT_SCREEN, G1, pygame.Rect(50, o_y, 60, 70), 1)
-        else: pygame.draw.rect(PLOT_SCREEN, G1, pygame.Rect(50, o_y, 60, 70), 1)
-    pygame.draw.rect(PLOT_SCREEN, GREEN, pygame.Rect(W-30, 60, 30, 390), 1)
-    pygame.draw.rect(PLOT_SCREEN, G2, pygame.Rect(W-30, 450, 30, 400), 1)
+        if(modes[c]>0):
+            pygame.draw.rect(PLOT_SCREEN, GREEN, pygame.Rect(1, o_y, 49, 70), 1)
+        else:
+            pygame.draw.rect(PLOT_SCREEN, G2, pygame.Rect(1, o_y, 49, 70), 1)
+    #big mode btts
+    pygame.draw.rect(PLOT_SCREEN, GREEN, pygame.Rect(1, H-55, (W/2)-1, 30), 1)
+    pygame.draw.rect(PLOT_SCREEN, G2, pygame.Rect(W/2, H-55, (W/2)-1, 30), 1)
     # blit on WINDOW
     WINDOW.blit(PLOT_SCREEN, (0, 0))
     # /SHOW/
@@ -923,13 +951,16 @@ def update_graphics_cts():
             CO_2 = G2
             CO_3 = G2
         # do plots           < .... POS HERE
-        o_y = 60+c*90
-        PLOTS_CTS[c].draw(PLOT_SCREEN, 110, o_y)
+        o_y = 30+c*80
+        PLOTS_CTS[c].draw(PLOT_SCREEN, 50, o_y)
         # redo btns  <<<<<<      BTN HERE
-        if(modes_cts[c]>0): pygame.draw.rect(PLOT_SCREEN, G1, pygame.Rect(50, o_y, 60, 70), 1)
-        else: pygame.draw.rect(PLOT_SCREEN, G1, pygame.Rect(50, o_y, 60, 70), 1)
-    pygame.draw.rect(PLOT_SCREEN, G2, pygame.Rect(W-30, 60, 30, 390), 1)
-    pygame.draw.rect(PLOT_SCREEN, GREEN, pygame.Rect(W-30, 450, 30, 400), 1)
+        if(modes_cts[c]>0):
+            pygame.draw.rect(PLOT_SCREEN, GREEN, pygame.Rect(1, o_y, 49, 70), 1)
+        else:
+            pygame.draw.rect(PLOT_SCREEN, G2, pygame.Rect(1, o_y, 49, 70), 1)
+    pygame.draw.rect(PLOT_SCREEN, G2, pygame.Rect(1, H-55, (W/2)-1, 30), 1)
+    pygame.draw.rect(PLOT_SCREEN, GREEN, pygame.Rect(W/2, H-55, (W/2)-1, 30), 1)
+
     # blit on WINDOW
     WINDOW.blit(PLOT_SCREEN, (0, 0))
     update_text_cts()
@@ -944,43 +975,40 @@ def update_text():
     #WINDOW.blit(DRAW_SCREEN, (0, 0))                  ###  < DEBUG HERE  ###
     # /LABELS/ upper
     AUX_LABEL = FONT.render('[ i n t e r s p e c i f i c s ]', 1, (64, 96, 0))
-    WINDOW.blit(AUX_LABEL, (50, 870))
+    WINDOW.blit(AUX_LABEL, (10, 782))
     AUX_LABEL = FONT.render(' [ AiRE ]', 1, GREEN)
-    WINDOW.blit(AUX_LABEL, (50, 30))
+    WINDOW.blit(AUX_LABEL, (10, 5))
     # /LABELS/ channels lab=name sta=value
     for j in range(N_CHANNELS):
-        if (modes[j]>0):     LAB = FONT.render("[_"+CHANNELS[j]+"]", 1, GREEN)
-        else:        LAB = FONT.render("[_"+CHANNELS[j]+"]", 1, G2)
-        if (modes[j]>0):     STA = FONTmini.render("{:0.2f}".format(actual_set[j]), 1, GREEN)
-        else:        STA = FONTmini.render("{:0.2f}".format(actual_set[j]), 1, G2)
+        if (modes[j]>0):     LAB = FONT.render(":"+CHANNELS[j], 1, GREEN)
+        else:        LAB = FONT.render(":"+CHANNELS[j], 1, G2)
+        if (modes[j]>0):     STA = FONTmini2.render("{:0.2f}".format(actual_set[j]), 1, GREEN)
+        else:        STA = FONTmini2.render("{:0.2f}".format(actual_set[j]), 1, G2)
         CO_L = coloros[actual_labels[j]]
-        aaa_lab = ''.join(["* " if actual_labels[j]==i  else '  ' for i in range(5)])
+        aaa_lab = ''.join(["*" if actual_labels[j]==i  else '  ' for i in range(5)])
         if (modes[j]>0):
             BK = FONTmini.render("[           ]", 1, GREEN)
             MDL = FONTmini.render("  {} ".format(aaa_lab), 1, CO_L)
         else:
             BK = FONTmini.render("[           ]", 1, G2)
             MDL = FONTmini.render("  {} ".format(aaa_lab), 1, G2)
-        WINDOW.blit(LAB, (60, 85 + j*90))
-        WINDOW.blit(STA, (60, 105 + j*90))
-        WINDOW.blit(MDL, (583, 105 + j*90))
-        WINDOW.blit(BK, (583, 105 + j*90))
+        WINDOW.blit(LAB, (25, 62 + j*80))
+        WINDOW.blit(STA, (15, 82 + j*80))
+        WINDOW.blit(MDL, (592-170, 82 + j*80))
+        WINDOW.blit(BK, (592-170, 82 + j*80))
     # /LABELS/ bottom
     CUNT_LABEL = FONT.render("[step]:  {}".format(ii), 1, CYAN)
-    WINDOW.blit(CUNT_LABEL, (550, 870))
+    WINDOW.blit(CUNT_LABEL, (385, 782))
     CUNT_LABEL = FONT.render("[timetag]:  "+ff[ii], 1, GREEN)
-    WINDOW.blit(CUNT_LABEL, (400, 30))
+    WINDOW.blit(CUNT_LABEL, (220, 5))
     if (not sw_dt):
         CUNT_LABEL = FONT.render("[timetag]:  ", 1, G1)
-        WINDOW.blit(CUNT_LABEL, (400, 30))
+        WINDOW.blit(CUNT_LABEL, (220, 5))
     #
-    BM_LABEL_a = FONT.render("M", 1, GREEN)
-    BM_LABEL_b = FONT.render("X", 1, GREEN)
-    WINDOW.blit(BM_LABEL_a, (W-20, 245))
-    WINDOW.blit(BM_LABEL_b, (W-20, 260))
-    BM_LABEL_c = FONT.render("W", 1, G2)
-    WINDOW.blit(BM_LABEL_c, (W-20, 645))
-    WINDOW.blit(BM_LABEL_c, (W-20, 660))
+    BM_LABEL_a = FONT.render("MX", 1, GREEN)
+    WINDOW.blit(BM_LABEL_a, (W/2 - 65, H-40))
+    BM_LABEL_c = FONT.render("WW", 1, G2)
+    WINDOW.blit(BM_LABEL_c, (W/2 + 45, H-40))
     # /SHOW/
     #pygame.display.flip()
     return
@@ -992,43 +1020,41 @@ def update_text_cts():
     #WINDOW.blit(CITIES_SCREEN, (0, 0))                  ###  < DEBUG BTNS HERE  ###
     # /LABELS/ upper
     AUX_LABEL = FONT.render('[ i n t e r s p e c i f i c s ]', 1, (64, 96, 0))
-    WINDOW.blit(AUX_LABEL, (50, 870))
+    WINDOW.blit(AUX_LABEL, (10, 782))
     AUX_LABEL = FONT.render(' [ AiRE ]', 1, GREEN)
-    WINDOW.blit(AUX_LABEL, (50, 30))
+    WINDOW.blit(AUX_LABEL, (10, 5))
     # /LABELS/ channels lab=name sta=value
     for j in range(N_CHANNELS):
-        if (modes_cts[j]>0):     LAB = FONT.render("[_"+CHANNELS_CITIES[j]+"]", 1, GREEN)
-        else:        LAB = FONT.render("[_"+CHANNELS_CITIES[j]+"]", 1, G2)
-        if (modes_cts[j]>0):     STA = FONTmini.render("{:0.2f}".format(actual_set_cts[j]), 1, GREEN)
-        else:        STA = FONTmini.render("{:0.2f}".format(actual_set_cts[j]), 1, G2)
+        if (modes_cts[j]>0):     LAB = FONT.render(":"+CHANNELS_CITIES[j], 1, GREEN)
+        else:        LAB = FONT.render(":"+CHANNELS_CITIES[j], 1, G2)
+        if (modes_cts[j]>0):     STA = FONTmini2.render("{:0.2f}".format(actual_set_cts[j]), 1, GREEN)
+        else:        STA = FONTmini2.render("{:0.2f}".format(actual_set_cts[j]), 1, G2)
         CO_L = coloros[actual_labels_cts[j]]
-        aaa_lab = ''.join(["* " if actual_labels_cts[j]==i  else '  ' for i in range(5)])
+        aaa_lab = ''.join(["*" if actual_labels_cts[j]==i  else '  ' for i in range(5)])
         if (modes_cts[j]>0):
             BK = FONTmini.render("[           ]", 1, GREEN)
             MDL = FONTmini.render("  {} ".format(aaa_lab), 1, CO_L)
         else:
             BK = FONTmini.render("[           ]", 1, G2)
             MDL = FONTmini.render("  {} ".format(aaa_lab), 1, G2)
-        WINDOW.blit(LAB, (60, 85 + j*90))
-        WINDOW.blit(STA, (60, 105 + j*90))
-        WINDOW.blit(MDL, (583, 105 + j*90))
-        WINDOW.blit(BK, (583, 105 + j*90))
+        WINDOW.blit(LAB, (25, 62 + j*80))
+        WINDOW.blit(STA, (15, 82 + j*80))
+        WINDOW.blit(MDL, (592-170, 82 + j*80))
+        WINDOW.blit(BK, (592-170, 82 + j*80))
     # /LABELS/ bottom
     CUNT_LABEL = FONT.render("[step]:  {}".format(jj), 1, CYAN)
-    WINDOW.blit(CUNT_LABEL, (550, 870))
+    WINDOW.blit(CUNT_LABEL, (385, 782))
     CUNT_LABEL = FONT.render("[timetag]:  "+ff_cts[jj], 1, GREEN)
-    WINDOW.blit(CUNT_LABEL, (400, 30))
+    WINDOW.blit(CUNT_LABEL, (220, 5))
     if (not sw_dt_cts):
         CUNT_LABEL = FONT.render("[timetag]:  ", 1, G1)
-        WINDOW.blit(CUNT_LABEL, (400, 30))
+        WINDOW.blit(CUNT_LABEL, (220, 5))
     #
-    BM_LABEL_a = FONT.render("M", 1, G2)
-    BM_LABEL_b = FONT.render("X", 1, G2)
-    WINDOW.blit(BM_LABEL_a, (W-20, 245))
-    WINDOW.blit(BM_LABEL_b, (W-20, 260))
-    BM_LABEL_c = FONT.render("W", 1, GREEN)
-    WINDOW.blit(BM_LABEL_c, (W-20, 645))
-    WINDOW.blit(BM_LABEL_c, (W-20, 660))
+    BM_LABEL_a = FONT.render("MX", 1, G2)
+    WINDOW.blit(BM_LABEL_a, (W/2 - 65, H-40))
+    BM_LABEL_c = FONT.render("WW", 1, GREEN)
+    WINDOW.blit(BM_LABEL_c, (W/2 + 45, H-40))
+
 
     # /SHOW/
     #pygame.display.flip()
